@@ -3,7 +3,7 @@ import { ajax } from 'rxjs/ajax';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import './style.css';
 
-const API_URL = 'https://rxjs-backend-nnvz.onrender.com';
+const API_URL = 'https://rxjs-backend-nnvz.onrender.com/messages/unread';
 
 const messagesList = document.getElementById('messages-list');
 
