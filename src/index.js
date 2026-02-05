@@ -38,22 +38,25 @@ function renderMessage(message) {
 }
 
 
-const stream$ = interval(3000)
-    .pipe(
-        switchMap(() => 
-            ajax.getJSON(API_URL).pipe(
-                catchError(error => {
-                    console.error('Server unavailable or error:', error);
-                    return of({ messages: [] });
-                })
-            )
-        ),
-        map(response => response.messages)
-    );
+const stream$ = interval(3000).pipe(
+    switchMap(() => 
+        ajax.getJSON(API_URL).pipe(
+            catchError(error => {
+                console.error('Error:', error);
+                return of({ messages: [] });
+            })
+        )
+    ),
+    map(response => response.messages)
+);
 
-
-stream$.subscribe(messages => {
+const subscription = stream$.subscribe(messages => {
     if (messages && messages.length > 0) {
         messages.forEach(message => renderMessage(message));
     }
+});
+
+window.addEventListener('beforeunload', () => {
+    subscription.unsubscribe();
+    console.log('Polling stopped');
 });
